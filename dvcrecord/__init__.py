@@ -4,4 +4,4 @@ __all__ = []
 
 # Cell
 
-from .trackedfile import TrackedFile
+from .stage import PipelineStage

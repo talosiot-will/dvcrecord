@@ -11,12 +11,13 @@ index = {"add_dvcr_commands": "deps.ipynb",
          "ParamFile": "params.ipynb",
          "Params": "params.ipynb",
          "PipelineStage": "stage.ipynb",
-         "test_stage": "stage.ipynb",
          "TrackedFile": "trackedfile.ipynb",
          "maybe_yaml": "utils.ipynb",
          "write_yaml": "utils.ipynb",
          "PARAMS_FILE_DEFAULT": "utils.ipynb",
-         "PIPELINE_FILE_DEFAULT": "utils.ipynb"}
+         "PIPELINE_FILE_DEFAULT": "utils.ipynb",
+         "DVC_DRY_RUN": "deps.ipynb",
+         "DO_NOT_INCLUDE_IN_PIPELINE": "deps.ipynb"}
 
 modules = ["deps.py",
            "__init__.py",

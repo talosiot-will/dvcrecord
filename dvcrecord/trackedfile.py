@@ -14,6 +14,10 @@ class TrackedFile:
         self.kwargs = kwargs
         self.file_obj = None
 
+    def open(self, *args, **kwargs):
+        self.file_obj = open(self.fpath, *args, **kwargs)
+        return self.file_obj
+
     def __enter__(self):
         self.file_obj = open(self.fpath, *self.args, **self.kwargs)
         return self.file_obj
