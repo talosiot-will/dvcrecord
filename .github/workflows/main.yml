@@ -1,0 +1,59 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    env:
+      deploy_keys_folder: "__deploykeys"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: 'x64'
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: apt update
+      run: apt update || sudo apt update
+    - name: install aws cli
+      run: apt install -y awscli jq || sudo apt install -y awscli jq
+    - name: Load all necessary deploy keys
+      run: make keys
+    - name: Install the library
+      run: |
+        if ls ${{ env.deploy_keys_folder }}/*.key 1> /dev/null 2>&1;
+        then
+            mkdir -p ~/.ssh
+            eval `ssh-agent`
+            ssh-add ${{ env.deploy_keys_folder }}/*.key
+            ssh -o StrictHostKeyChecking=no -T git@github.com || true
+            #ssh into github with no stricthostkeychecking adds github.com to the known hosts
+            #but...
+            #ssh into github fails with an error code because github kicks you out
+        fi
+        pip install nbdev jupyter
+        pip install -e .
+    - name: Read all notebooks
+      run: |
+        nbdev_read_nbs
+    - name: Check if all notebooks are cleaned
+      run: |
+        echo "Check we are starting with clean git checkout"
+        git status
+        if [ -n "$(git status -uno -s)" ]; then echo "git status is not clean"; false; fi
+        echo "Trying to strip out notebooks"
+        nbdev_clean_nbs
+        echo "Check that strip out was unnecessary"
+        git status -s # display the status to see which nbs need cleaning up
+        if [ -n "$(git status -uno -s)" ]; then echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev_install_git_hooks"; false; fi
+    - name: Check if there is no diff library/notebooks
+      run: |
+        if [ -n "$(nbdev_diff_nbs)" ]; then echo -e "!!! Detected difference between the notebooks and the library"; echo "$(nbdev_diff_nbs)"; false; fi
+    - name: Run tests
+      run: |
+        nbdev_test_nbs
