@@ -17,7 +17,8 @@ index = {"add_dvcr_commands": "deps.ipynb",
          "PARAMS_FILE_DEFAULT": "utils.ipynb",
          "PIPELINE_FILE_DEFAULT": "utils.ipynb",
          "DVC_DRY_RUN": "deps.ipynb",
-         "DO_NOT_INCLUDE_IN_PIPELINE": "deps.ipynb"}
+         "DO_NOT_INCLUDE_IN_PIPELINE": "deps.ipynb",
+         "logger": "deps.ipynb"}
 
 modules = ["deps.py",
            "__init__.py",

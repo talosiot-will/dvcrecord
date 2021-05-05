@@ -3,21 +3,19 @@
 __all__ = ['Output']
 
 # Cell
+import os
 import collections
 from .utils import maybe_yaml
-from .trackedfile import TrackedFile
 
 class Output:
     def __init__(self):
-        self.out_files = collections.OrderedDict({})
+        self.out_files = []
 
-    def load(self, fpath, *args, **kwargs):
-        '''
-        Returns a file or directory name and records it
-        '''
-        tracked_file = self.out_files.setdefault(fpath, TrackedFile(fpath, *args, **kwargs))
-        return tracked_file
+    def register(self, *args):
+        fpath = os.path.join(*args)
+        if fpath not in self.out_files:
+            self.out_files.append(fpath)
+        return fpath
 
     def render(self, as_yaml=False):
-        returnme = [out_file.render(as_yaml=False) for out_file in self.out_files.values()]
-        return maybe_yaml(returnme, as_yaml=as_yaml)
+        return maybe_yaml(self.out_files, as_yaml=as_yaml)

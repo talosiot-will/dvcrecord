@@ -54,6 +54,9 @@ class Params:
         name = name or param.fpath
         self._params[name] = param
 
+    def list_of_files(self):
+        return [fpath for fpath in self._params]
+
     def load(self, path):
         '''
         Lazily access parameters in files

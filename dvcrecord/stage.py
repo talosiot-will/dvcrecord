@@ -15,7 +15,7 @@ from .utils import maybe_yaml, write_yaml, PIPELINE_FILE_DEFAULT
 class PipelineStage:
     def __init__(self, name, params=None, outputs=None, deps=None, parser=None):
         self.name = name
-        self.parser = parser
+        self.parser = parser or make_parser()
 
         self.outputs = outputs or Output()
         self.params = params or Params()
@@ -41,7 +41,8 @@ class PipelineStage:
         if self.parser is None:
             return None
         else:
-            return self.parser.parse_args(*args, **kwargs)
+            known, unknown = self.parser.parse_known_args(*args, **kwargs)
+            return known
 
     def render_cmd(self, cli_args=None):
         cli_args = cli_args or sys.argv[:]
@@ -50,6 +51,9 @@ class PipelineStage:
 
     def render(self, as_yaml=False):
         dvc_config = {}
+
+        self.deps.register_sourcecode()
+        self.deps.register_param(self.params)
 
         for key, render_func in self.rendering_funcs.items():
             this_yaml = render_func(as_yaml=False)
