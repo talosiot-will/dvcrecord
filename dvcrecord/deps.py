@@ -60,9 +60,9 @@ class Dependency:
         else:
             return []
 
-    def register_param(self, param):
-        for fpath in param.list_of_files():
-            self.register(fpath)
+    #def register_param(self, param):
+    #    for fpath in param.list_of_files():
+    #        self.register(fpath)
 
     def register_sourcecode(self, command=None):
         command = command or sys.argv[:]

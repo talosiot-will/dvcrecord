@@ -53,7 +53,7 @@ class PipelineStage:
         dvc_config = {}
 
         self.deps.register_sourcecode()
-        self.deps.register_param(self.params)
+        #self.deps.register_param(self.params)
 
         for key, render_func in self.rendering_funcs.items():
             this_yaml = render_func(as_yaml=False)
