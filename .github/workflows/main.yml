@@ -11,31 +11,8 @@ jobs:
       with:
         python-version: '3.8'
         architecture: 'x64'
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-    - name: apt update
-      run: apt update || sudo apt update
-    - name: install aws cli
-      run: apt install -y awscli jq || sudo apt install -y awscli jq
-    - name: Load all necessary deploy keys
-      run: make keys
     - name: Install the library
       run: |
-        if ls ${{ env.deploy_keys_folder }}/*.key 1> /dev/null 2>&1;
-        then
-            mkdir -p ~/.ssh
-            eval `ssh-agent`
-            ssh-add ${{ env.deploy_keys_folder }}/*.key
-            ssh -o StrictHostKeyChecking=no -T git@github.com || true
-            #ssh into github with no stricthostkeychecking adds github.com to the known hosts
-            #but...
-            #ssh into github fails with an error code because github kicks you out
-        fi
         pip install nbdev jupyter
         pip install -e .
     - name: Read all notebooks

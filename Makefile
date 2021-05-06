@@ -18,7 +18,7 @@ clean:
 	rm -rf dist
 
 github:
-	act -s AWS_ACCESS_KEY_ID -s AWS_SECRET_ACCESS_KEY -P ubuntu-latest=github_workflow_tester
+	act -P ubuntu-latest=wgathright/github_workflow_tester
 
 env:
 	virtualenv .venv -p python3.8 --prompt "[$(shell basename "`pwd`")] "
