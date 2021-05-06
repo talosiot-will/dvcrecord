@@ -9,7 +9,10 @@ entries:
     - output: web,pdf
       title: Overview
       url: /
+    - output: web,pdf
+      title: Title
+      url: utils.html
     output: web
-    title: repo_template
+    title: dvcrecord
   output: web
   title: Sidebar

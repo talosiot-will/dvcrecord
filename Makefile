@@ -18,7 +18,7 @@ clean:
 	rm -rf dist
 
 github:
-	act -P ubuntu-latest=github_workflow_tester
+	act -P ubuntu-latest=wgathright/github_workflow_tester
 
 env:
 	virtualenv .venv -p python3.8 --prompt "[$(shell basename "`pwd`")] "
