@@ -92,7 +92,7 @@ split = stage.params.load('prepare.split')
 random.seed(stage.params.load('prepare.seed'))
 ```
 
-We can load the input_file straight a the command line argument.
+We can load the input_file straight from the command line argument.
 ```python
 input_file = stage.deps.from_cli()[0]
 ```
