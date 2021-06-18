@@ -57,6 +57,12 @@ class Params:
     def list_of_files(self):
         return [fpath for fpath in self._params]
 
+    def _first_param_file(self):
+        try:
+            return next(iter(self._params))
+        except StopIteration:
+            return None
+
     def load(self, path):
         '''
         Lazily access parameters in files
@@ -67,11 +73,17 @@ class Params:
         if sep in path:
             fname, param_name = path.split(sep)
         else:
-            fname = PARAMS_FILE_DEFAULT
+            fname = self._first_param_file() or ParamFile()
             param_name = path
 
-        fname = fname.strip()
-        param_name = param_name.strip()
+        try:
+            fname = fname.strip()
+        except AttributeError:
+            pass
+        try:
+            param_name = param_name.strip()
+        except AttributeError:
+            pass
 
         try:
             pf = self._params[fname]
