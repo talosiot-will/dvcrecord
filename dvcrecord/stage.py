@@ -13,13 +13,14 @@ from .output import Output
 from .utils import maybe_yaml, write_yaml, PIPELINE_FILE_DEFAULT
 
 class PipelineStage:
-    def __init__(self, name, params=None, outputs=None, deps=None, parser=None):
+    def __init__(self, name, params=None, outputs=None, deps=None, parser=None, pipefile=None):
         self.name = name
+        self.pipefile = pipefile or PIPELINE_FILE_DEFAULT
         self.parser = parser or make_parser()
 
         self.outputs = outputs or Output()
         self.params = params or Params()
-        self.deps = deps or Dependency(namespace=self.parse_args())
+        self.deps = deps or Dependency(namespace=self.parse_args(), pipefile=pipefile)
 
         self.rendering_funcs = {
             'params': self.params.render,
@@ -67,7 +68,7 @@ class PipelineStage:
         print(self.render(as_yaml=True))
 
     def write(self, pipefile=None):
-        pipefile = pipefile or PIPELINE_FILE_DEFAULT
+        pipefile = pipefile or self.pipefile
         try:
             with open(pipefile, 'r') as f:
                 pipeline = yaml.safe_load(f)
